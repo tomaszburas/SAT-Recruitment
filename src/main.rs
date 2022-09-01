@@ -5,7 +5,7 @@ use rand::Rng;
 
 #[derive(Serialize)]
 struct ProbabilityOfUnitInjectorFailRes {
-    probabilityOfUnitInjectorFail: u8,
+    failProbability: f32,
 }
 
 #[derive(Serialize)]
@@ -17,25 +17,30 @@ struct FuelUsageForDistanceRes {
 struct FuelUsageForDistanceReq {
     distance: u16,
     yearOfProduction: u16,
-    fuelUsage: u8,
+    fuelUsagePer100KM: u8,
+}
+
+#[derive(Deserialize)]
+struct FailProbabilityReq {
+    vin: String,
 }
 
 #[get("/calculate-dissel-usage-for-distance")]
 async fn calculateFuelUsageForDistance(req: web::Query<FuelUsageForDistanceReq>) -> Result<impl Responder> {
-    let value = (req.distance as f32)*(req.fuelUsage as f32)/100.0;
+    let value = (req.distance as f32)*(req.fuelUsagePer100KM as f32)/100.0;
     let res = FuelUsageForDistanceRes {
         fuelUsage: value,
     };
-    Ok(web::Json(res))
+    return Ok(web::Json(res))
 }
 
 #[get("/probability-of-unit-injector-fail")]
-async fn probabilityOfUnitInjectorFail() -> Result<impl Responder> {
-    let value = rand::thread_rng().gen_range(0..101);
+async fn probabilityOfUnitInjectorFail(req: web::Query<FailProbabilityReq>) -> Result<impl Responder> {
+    let value = (rand::thread_rng().gen_range(0..101) as f32)/100.0;
     let res = ProbabilityOfUnitInjectorFailRes {
-        probabilityOfUnitInjectorFail: value,
+        failProbability: value,
     };
-    Ok(web::Json(res))
+    return Ok(web::Json(res))
 }
 
 #[actix_web::main]
