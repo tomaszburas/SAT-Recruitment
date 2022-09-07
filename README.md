@@ -34,8 +34,7 @@
   a number.
 
 - **Returns**:
-  + fuelUsage- based on input, please perform calculations
-  that will allow to define fuelConsumotion.
+  + fuelUsage - fuel consumotion.
 
 ![get1](https://i.imgur.com/w5j716Z.jpg "Get1")
 
